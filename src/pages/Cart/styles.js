@@ -5,6 +5,16 @@ export const Container = styled.div`
     background: #fff;
     border-radius: 5px;
 
+    header {
+        display: flex;
+        justify-content: space-around;
+        width: 100%;
+        padding-left: 16%;
+        font-size: 18px;
+        font-weight: bold;
+        color: #a8a6a9;
+    }
+
     footer {
         display: flex;
         margin-top: 30px;
@@ -31,22 +41,16 @@ export const Container = styled.div`
     }
 `;
 
-export const ProductTable = styled.table`
+export const ProductCart = styled.div`
     width: 100%;
-
-    thead th {
-        color: #999;
-        text-align: left;
-        padding: 12px;
-    }
-
-    thead td {
-        padding: 12px;
-        border-bottom: 1px solid #eee;
-    }
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 10px;
 
     img {
-        height: 100px;
+        width: 15%;
     }
 
     strong {
@@ -61,6 +65,12 @@ export const ProductTable = styled.table`
         font-weight: bold;
     }
 
+    .description-group {
+        flex-direction: column;
+        justify-content: center;
+        align-items: flex-start;
+    }
+
     div {
         display: flex;
         align-items: center;
@@ -70,7 +80,7 @@ export const ProductTable = styled.table`
             border-radius: 4px;
             color: #666;
             padding: 6px;
-            width: 50px;
+            width: 80px;
         }
     }
 
@@ -81,4 +91,10 @@ export const ProductTable = styled.table`
     }
 `;
 
-export const Total = styled.div``;
+export const Total = styled.div`
+    font-size: 16px;
+    span {
+        margin-right: 5px;
+        font-weight: 500;
+    }
+`;
