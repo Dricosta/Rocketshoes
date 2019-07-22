@@ -1,57 +1,59 @@
-import React from 'react';
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import { MdAddShoppingCart } from 'react-icons/md';
 import { ProductList } from './styles';
+import api from '../../services/api';
+import { formatPrice } from '../../util/format';
 
-export default function Home() {
-    return (
-        <ProductList>
-            <li>
-                <img
-                    src="https://i.pinimg.com/564x/68/b6/bf/68b6bf0fe23bb80c71a70581fa87223f.jpg"
-                    alt="tenis"
-                />
-                <strong>Vans old School</strong>
-                <span>R$ 129,00</span>
+class Home extends Component {
+    state = {
+        products: []
+    };
 
-                <button type="button">
-                    <div>
-                        <MdAddShoppingCart size={16} color="#FFF" /> 3
-                    </div>
-                    <span>Adicionar ao carrinho</span>
-                </button>
-            </li>
+    async componentDidMount() {
+        const response = await api.get('products');
 
-            <li>
-                <img
-                    src="https://i.pinimg.com/564x/68/b6/bf/68b6bf0fe23bb80c71a70581fa87223f.jpg"
-                    alt="tenis"
-                />
-                <strong>Vans old School</strong>
-                <span>R$ 129,00</span>
+        const data = response.data.map(product => ({
+            ...product,
+            priceFormatted: formatPrice(product.price)
+        }));
 
-                <button type="button">
-                    <div>
-                        <MdAddShoppingCart size={16} color="#FFF" /> 3
-                    </div>
-                    <span>Adicionar ao carrinho</span>
-                </button>
-            </li>
+        this.setState({ products: data });
+    }
 
-            <li>
-                <img
-                    src="https://i.pinimg.com/564x/68/b6/bf/68b6bf0fe23bb80c71a70581fa87223f.jpg"
-                    alt="tenis"
-                />
-                <strong>Vans old School</strong>
-                <span>R$ 129,00</span>
+    handleAddProduct = product => {
+        const { dispatch } = this.props;
 
-                <button type="button">
-                    <div>
-                        <MdAddShoppingCart size={16} color="#FFF" /> 3
-                    </div>
-                    <span>Adicionar ao carrinho</span>
-                </button>
-            </li>
-        </ProductList>
-    );
+        dispatch({
+            type: 'ADD_TO_CART',
+            product
+        });
+    };
+
+    render() {
+        const { products } = this.state;
+        return (
+            <ProductList>
+                {products.map(product => (
+                    <li key={product.id}>
+                        <img src={product.image} alt={product.title} />
+                        <strong>{product.title}</strong>
+                        <span>{product.priceFormatted}</span>
+
+                        <button
+                            type="button"
+                            onClick={this.handleAddProduct(product)}
+                        >
+                            <div>
+                                <MdAddShoppingCart size={16} color="#FFF" /> 3
+                            </div>
+                            <span>Adicionar ao carrinho</span>
+                        </button>
+                    </li>
+                ))}
+            </ProductList>
+        );
+    }
 }
+
+export default connect()(Home);
