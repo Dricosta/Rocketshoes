@@ -1,4 +1,5 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import {
     MdRemoveCircleOutline,
     MdAddCircleOutline,
@@ -7,7 +8,7 @@ import {
 
 import { Container, ProductCart, Total } from './styles';
 
-export default function Cart() {
+function Cart({ cart, dispatch }) {
     return (
         <Container>
             <header>
@@ -15,33 +16,39 @@ export default function Cart() {
                 <span>qtd</span>
                 <span>subtotal</span>
             </header>
-            <ProductCart>
-                <img
-                    src="https://i.pinimg.com/564x/68/b6/bf/68b6bf0fe23bb80c71a70581fa87223f.jpg"
-                    alt="produto"
-                />
+            {cart.map(product => (
+                <ProductCart key={product.title}>
+                    <img src={product.image} alt={product.title} />
 
-                <div className="description-group">
-                    <strong>Tênis muito massa</strong>
-                    <span>R$129,00</span>
-                </div>
+                    <div className="description-group">
+                        <strong>{product.title}</strong>
+                        <span>{product.priceFormatted}</span>
+                    </div>
 
-                <div>
-                    <button type="button">
-                        <MdRemoveCircleOutline size={20} color="#7159c1" />
+                    <div>
+                        <button type="button">
+                            <MdRemoveCircleOutline size={20} color="#7159c1" />
+                        </button>
+                        <input type="number" readOnly value={product.amount} />
+                        <button type="button">
+                            <MdAddCircleOutline size={20} color="#7159c1" />
+                        </button>
+                    </div>
+
+                    <strong>R$ 258,00</strong>
+                    <button
+                        type="button"
+                        onClick={() =>
+                            dispatch({
+                                type: 'REMOVE_FROM_CART',
+                                id: product.id
+                            })
+                        }
+                    >
+                        <MdDelete size="20" color="#7159c1" />
                     </button>
-                    <input type="number" readOnly value={1} />
-                    <button type="button">
-                        <MdAddCircleOutline size={20} color="#7159c1" />
-                    </button>
-                </div>
-
-                <strong>R$ 258,00</strong>
-                <button type="button">
-                    <MdDelete size="20" color="#7159c1" />
-                </button>
-            </ProductCart>
-
+                </ProductCart>
+            ))}
             <footer>
                 <button type="button">Finalizar pedido</button>
                 <Total>
@@ -52,3 +59,9 @@ export default function Cart() {
         </Container>
     );
 }
+
+const mapStateToProps = state => ({
+    cart: state.cart
+});
+
+export default connect(mapStateToProps)(Cart);
